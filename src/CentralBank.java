@@ -7,7 +7,7 @@ public class CentralBank implements IBank
 
     private final int userSession_Int;
 
-    CentralBank(int userSession_Int)
+    public CentralBank(int userSession_Int)
     {
 
         this.userSession_Int = userSession_Int;
