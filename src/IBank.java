@@ -9,12 +9,25 @@ interface  IBank
 
     public String GetCvv2_Method();
 
-    public Boolean SetAccountNumber_Method(String accountNumber_String);
+    public int SetAccountNumber_Method(String accountNumber_String);
 
-    public Boolean SetCardNumber_Method(String cardNumber_String);
+    public int SetCardNumber_Method(String cardNumber_String);
 
-    public Boolean SetCardDate_Method(String cardDate_String);
+    public int SetCardDate_Method(String cardDate_String);
 
-    public Boolean SetCvv2_Method(String cvv2_String);
+    public int SetCvv2_Method(String cvv2_String);
+    
+    public static abstract class Checkpoint
+    {
+
+        public abstract int AccountNumberValidation_Method(String accountNumber_String);
+
+        public abstract int CardNumberValidation_Method(String cardNumber_String);
+
+        public abstract int CardDateValidation_Method(String cardDate_String);
+
+        public abstract int Cvv2Validation_Method(String cvv2_String);
+
+    }
     
 }
