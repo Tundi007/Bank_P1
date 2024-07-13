@@ -1,24 +1,23 @@
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 
 public class CentralBank implements IBank
 {
 
-    private final int userSession_Int;
+    public int userSession_Int;
 
-    public CentralBank(int userSession_Int)
-    {
+    // public abstract  CentralBank(int userSession_Int)
+    // {
 
-        this.userSession_Int = userSession_Int;
+    //     this.userSession_Int = userSession_Int;
 
-    }
+    // }
 
     private String accountNumber_String;
 
     private String cardNumber_String;
 
-    private String cardDate_String;
+    private LocalDate cardDate_LocalDate;
 
     private String cvv2_String;
 
@@ -49,10 +48,10 @@ public class CentralBank implements IBank
     public String GetCardDate_Method()
     {
 
-        if(cardDate_String.isBlank())        
+        if(cardDate_LocalDate == null)        
             return "";
 
-        return cardDate_String;
+        return cardDate_LocalDate.toString();
 
     }
 
@@ -98,15 +97,17 @@ public class CentralBank implements IBank
     }
 
     @Override
-    public int SetCardDate_Method(String cardNumber_String)
+    public int SetCardDate_Method(String cardDate_String)
     {
 
-        cardNumber_String = cardNumber_String.trim();
+        cardDate_String = cardDate_String.trim();
 
-        if(Checkpoint.CardDateValidation_Method(cardNumber_String) == 1)
+        LocalDate tempCardDate_LocalDate = LocalDate.parse(cardDate_String);//yyyy-dd-mm
+
+        if(tempCardDate_LocalDate == null | Checkpoint.CardDateValidation_Method(tempCardDate_LocalDate) == 1)
             return 1;
 
-        this.cardNumber_String = cardNumber_String;
+        this.cardDate_LocalDate = tempCardDate_LocalDate;
 
         return 0;
 
@@ -127,7 +128,7 @@ public class CentralBank implements IBank
 
     }
 
-    private static class Checkpoint
+    public static class Checkpoint
     {
 
         private static int AccountNumberValidation_Method(String accountNumber_String)
@@ -157,7 +158,7 @@ public class CentralBank implements IBank
 
         }
 
-        private static abstract class BankDefined
+        public abstract static class BankDefined
         {
 
             public abstract int BankDefinedAccountNumberValidation_Method(String accountNumber_String);
@@ -166,12 +167,15 @@ public class CentralBank implements IBank
         
         }
 
-        private static int CardDateValidation_Method(String cardDate_String)
+        private static int CardDateValidation_Method(LocalDate tempCardDate_LocalDate)
         {
 
-            if(Period.of(5, 0, 0).minus(Period.between(
-                LocalDate.parse(cardDate_String,DateTimeFormatter.ofPattern("yyyy/mm/dd")),
-                LocalDate.now())).isNegative())
+            Period CardDate_Period;
+
+            if((Period.of(5, 0, 0).minus(CardDate_Period = Period.between(
+                tempCardDate_LocalDate,
+                LocalDate.now()))).isNegative() |
+                CardDate_Period.isNegative())
                 return 1;
 
             return 0;
