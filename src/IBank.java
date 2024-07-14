@@ -2,7 +2,7 @@
 import java.time.LocalDate;
 import java.time.Period;
 
-interface  IBank
+interface IBank
 {
 
     String GetAccountNumber_Method();
@@ -56,9 +56,9 @@ interface  IBank
 
             Period CardDate_Period;
 
-            if((Period.of(5, 0, 0).minus(CardDate_Period = Period.between(
-                tempCardDate_LocalDate,
-                LocalDate.now()))).isNegative() |
+            if((Period.of(5, 0, 0).minus(CardDate_Period = Period.between(                
+                LocalDate.now()
+                ,tempCardDate_LocalDate))).isNegative() |
                 CardDate_Period.isNegative())
                 return 1;
 

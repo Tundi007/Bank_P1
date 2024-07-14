@@ -1,19 +1,19 @@
 import java.time.LocalDate;
 
-public class CentralBank implements IBank
+abstract class CentralBank implements IBank
 {
 
-    String bankDefinedAccountNumber_String;
+    char[][] bankDefinedAccountNumber_String;
 
     String bankDefinedCardNumber_String;
 
-    private String accountNumber_String = "";
+    String accountNumber_String = "";
 
-    private String cardNumber_String = "";
+    String cardNumber_String = "";
 
-    private LocalDate cardDate_LocalDate;
+    LocalDate cardDate_LocalDate;
 
-    private String cvv2_String = "";
+    String cvv2_String = "";
 
     @Override
     public String GetAccountNumber_Method()
@@ -128,10 +128,10 @@ public class CentralBank implements IBank
 
     }
 
-    private static class Checkpoint extends IBank.Checkpoint
+    protected static class Checkpoint extends IBank.Checkpoint
     {
 
-        public static class BankDefined
+        protected static class BankDefined
         {
 
             protected static int AccountNumberValidation_Method(String accountNumber_String)
