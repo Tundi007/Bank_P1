@@ -1,19 +1,24 @@
 public class SepahBank extends CentralBank
 {
 
-    public int userSession_Int;
+    private int userSession_Int;
+
+    private static final char[][] definedAccountNumber_2Dchar = {"200".toCharArray(),"018".toCharArray()};
+
+    private static final String definedCardNumber_String = "6219";
 
     public SepahBank(int userSession_Int)
     {
 
         this.userSession_Int = userSession_Int;
 
-        bankDefinedAccountNumber_String[0] = "200".toCharArray();
+    }
 
-        bankDefinedAccountNumber_String[1] = "018".toCharArray();
-
-        bankDefinedCardNumber_String = "6219";
-
+    protected static class Checkpoint extends CentralBank.Checkpoint
+    {
+        public static class BankDefined extends CentralBank.Checkpoint.BankDefined
+        {
+        }
     }
     
 }
