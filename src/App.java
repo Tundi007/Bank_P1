@@ -6,14 +6,10 @@ class App
 
         String error_String = "";
 
-        int option_Int;
+        while(true)
+        {            
 
-        while((option_Int = UI.KeyToString_Method("Welcome, Select Your Bank", new String[]{"Meli Bank","Sepah Bank"},error_String)) != -1)
-        {
-
-            error_String = "";
-
-            switch (option_Int)
+            switch (UI.Menu_Method("Welcome, Select Your Bank:", new String[]{"Meli Bank","Sepah Bank"},error_String))
             {
              
                 case 0 ->
@@ -22,12 +18,18 @@ class App
                 case 1 ->
                 {
 
+                    error_String = "";
 
+                    
                     
                 }
 
                 case 2 ->
                 {
+
+                    error_String = "";
+
+
                     
                 }
 

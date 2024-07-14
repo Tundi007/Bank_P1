@@ -3,7 +3,7 @@ import java.util.Scanner;
 public final class UI
 {
 
-    public static int KeyToString_Method(String menuTitle_String,String[] menuItems_ArrayString, String error_String) throws NegativeArraySizeException, ClassNotFoundException
+    public static int Menu_Method(String menuTitle_String,String[] menuItems_ArrayString, String error_String) throws NegativeArraySizeException, ClassNotFoundException
     {
 
         ClearScreen_Method();
@@ -54,7 +54,14 @@ public final class UI
         return menuItems_ArrayString.length+1;
 
     }
-        
+      
+    public static String Insert_Method(String menuTitle_String,String[] menuItems_ArrayString, String error_String) throws NegativeArraySizeException, ClassNotFoundException
+    {
+
+        return "";
+
+    }
+
     private static void ClearScreen_Method()
     {  
         

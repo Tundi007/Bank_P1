@@ -5,64 +5,74 @@ import java.time.Period;
 abstract class CentralBank
 {
 
-    private final char[][] definedAccountNumber_2DChar;
+    private final char[][] definedAccountID_2DChar;
 
-    private final char[] definedCardNumber_ArrayChar;
+    private final char[] definedCardID_ArrayChar;
 
-    private final String[] accountType_ArrayString;
+    private final String[] accountTypes_ArrayString;
+
+    private final double[] accountInterest_ArrayInt;
 
     private int accountType_Int = -1;
 
-    private String accountNumber_String = "";
+    private String accountID_String = "";
 
-    private String cardNumber_String = "";
+    private String cardID_String = "";
 
     private LocalDate cardDate_LocalDate;
 
     private String cvv2_String = "";
 
-    private final double[] accountInterest_ArrayInt;
-
-    protected CentralBank(String[] accountType_ArrayString, char[][] definedAccountNumber_2DChar, char[] definedCardNumber_ArrayChar,double[]accountInterest_ArrayInt)
+    protected CentralBank(String[] accountTypes_ArrayString, char[][] definedAccountID_2DChar, char[] definedCardID_ArrayChar,double[]accountInterest_ArrayInt)
     {
 
         this.accountInterest_ArrayInt = accountInterest_ArrayInt;
 
-        this.definedAccountNumber_2DChar = definedAccountNumber_2DChar;
+        this.definedAccountID_2DChar = definedAccountID_2DChar;
 
-        this.definedCardNumber_ArrayChar = definedCardNumber_ArrayChar;
+        this.definedCardID_ArrayChar = definedCardID_ArrayChar;
 
-        this.accountType_ArrayString = accountType_ArrayString;
+        this.accountTypes_ArrayString = accountTypes_ArrayString;
 
     }
 
-    public final String GetAccountType_ArrayString()
+    public final String GetAccountTypes_ArrayString()
     {
 
         if(accountType_Int == -1)
             return "";
 
-        return accountType_ArrayString[accountType_Int];
+        return accountTypes_ArrayString[accountType_Int];
 
     }
 
-    public final String GetAccountNumber_Method()
+    public final double GetAccountInterest_ArrayString()
     {
 
-        if (accountNumber_String.isBlank())
-            return "";
+        if(accountType_Int == -1)
+            return -1;
 
-        return accountNumber_String;
+        return accountInterest_ArrayInt[accountType_Int];
 
     }
 
-    public final String GetCardNumber_Method()
+    public final String GetAccountID_Method()
     {
 
-        if (cardNumber_String.isBlank())        
+        if (accountID_String.isBlank())
             return "";
 
-        return cardNumber_String;
+        return accountID_String;
+
+    }
+
+    public final String GetCardID_Method()
+    {
+
+        if (cardID_String.isBlank())        
+            return "";
+
+        return cardID_String;
 
     }
 
@@ -87,35 +97,35 @@ abstract class CentralBank
 
     }
 
-    public int SetAccountNumber_Method(String accountNumber_String)
+    public int SetAccountID_Method(String accountID_String)
     {
 
-        accountNumber_String = accountNumber_String.trim();
+        accountID_String = accountID_String.trim();
 
-        if (Checkpoint.AccountNumberValidation_Method(accountNumber_String) == 1)
+        if (Checkpoint.AccountIDValidation_Method(accountID_String) == 1)
             return 1;
 
-        if ((accountType_Int = Checkpoint.BankDefined.AccountNumberValidation_Method(accountNumber_String.toCharArray(),definedAccountNumber_2DChar)) == 0)
+        if ((accountType_Int = Checkpoint.BankDefined.AccountIDValidation_Method(accountID_String.toCharArray(),definedAccountID_2DChar)) == 0)
             return 2;
 
-        this.accountNumber_String = accountNumber_String;
+        this.accountID_String = accountID_String;
 
         return accountType_Int;
 
     }
 
-    public int SetCardNumber_Method(String cardNumber_String)
+    public int SetCardID_Method(String cardID_String)
     {
 
-        cardNumber_String = cardNumber_String.trim();
+        cardID_String = cardID_String.trim();
 
-        if (Checkpoint.CardNumberValidation_Method(cardNumber_String) == 1)
+        if (Checkpoint.CardIDValidation_Method(cardID_String) == 1)
             return 1;
 
-        if (Checkpoint.BankDefined.CardNumberValidation_Method(cardNumber_String.toCharArray(),definedCardNumber_ArrayChar) == 1)
+        if (Checkpoint.BankDefined.CardIDValidation_Method(cardID_String.toCharArray(),definedCardID_ArrayChar) == 1)
             return 2;
 
-        this.cardNumber_String = cardNumber_String;
+        this.cardID_String = cardID_String;
 
         return 0;
 
@@ -154,27 +164,27 @@ abstract class CentralBank
     abstract private static class Checkpoint
     {
 
-        private static int AccountNumberValidation_Method(String accountNumber_String)
+        private static int AccountIDValidation_Method(String accountID_String)
         {
 
-            if (accountNumber_String.length() != 10)
+            if (accountID_String.length() != 10)
                 return 1;
 
             return 0;
         
         }
 
-        private static int CardNumberValidation_Method(String cardNumber_String)
+        private static int CardIDValidation_Method(String cardID_String)
         {
 
-            if (cardNumber_String.length() != 16)
+            if (cardID_String.length() != 16)
                 return 1;
 
             if (!String.format("%1$c%2$c%3$c%4$c",
-                cardNumber_String.charAt(0),
-                cardNumber_String.charAt(1),
-                cardNumber_String.charAt(2),
-                cardNumber_String.charAt(3)).equals("5051"))
+                cardID_String.charAt(0),
+                cardID_String.charAt(1),
+                cardID_String.charAt(2),
+                cardID_String.charAt(3)).equals("5051"))
                 return 1;
 
             return 0;
@@ -209,27 +219,27 @@ abstract class CentralBank
         private abstract static class BankDefined
         {
 
-            private final static int AccountNumberValidation_Method(char[] accountNumber_ArrayChar,char[][]definedAccountNumber_2DChar)
+            private final static int AccountIDValidation_Method(char[] accountID_ArrayChar,char[][]definedAccountID_2DChar)
             {
 
-                for(int definedNumber_Int = 0; definedNumber_Int < definedAccountNumber_2DChar.length; definedNumber_Int++)
+                for(int definedNumber_Int = 0; definedNumber_Int < definedAccountID_2DChar.length; definedNumber_Int++)
                 {
 
-                    switch (definedAccountNumber_2DChar[definedNumber_Int].length)
+                    switch (definedAccountID_2DChar[definedNumber_Int].length)
                     {
 
                         case 3 ->
                         {
 
                             if (String.format("%1$c%2$c%3$c",
-                                    accountNumber_ArrayChar[4],
-                                    accountNumber_ArrayChar[5],
-                                    accountNumber_ArrayChar[6]
+                                    accountID_ArrayChar[4],
+                                    accountID_ArrayChar[5],
+                                    accountID_ArrayChar[6]
                                 ).equals(
                                     String.format("%1$c%2$c%3$c",
-                                        definedAccountNumber_2DChar[definedNumber_Int][0],
-                                        definedAccountNumber_2DChar[definedNumber_Int][1],
-                                        definedAccountNumber_2DChar[definedNumber_Int][2]
+                                        definedAccountID_2DChar[definedNumber_Int][0],
+                                        definedAccountID_2DChar[definedNumber_Int][1],
+                                        definedAccountID_2DChar[definedNumber_Int][2]
                                     )
                                 )
                             )
@@ -241,16 +251,16 @@ abstract class CentralBank
                         {
 
                             if (String.format("%1$c%2$c%3$c%4$c",
-                                    accountNumber_ArrayChar[4],
-                                    accountNumber_ArrayChar[5],
-                                    accountNumber_ArrayChar[6],
-                                    accountNumber_ArrayChar[7]
+                                    accountID_ArrayChar[4],
+                                    accountID_ArrayChar[5],
+                                    accountID_ArrayChar[6],
+                                    accountID_ArrayChar[7]
                                 ).equals(
                                     String.format("%1$c%2$c%3$c%4$c",
-                                        definedAccountNumber_2DChar[definedNumber_Int][0],
-                                        definedAccountNumber_2DChar[definedNumber_Int][1],
-                                        definedAccountNumber_2DChar[definedNumber_Int][2],
-                                        definedAccountNumber_2DChar[definedNumber_Int][3]
+                                        definedAccountID_2DChar[definedNumber_Int][0],
+                                        definedAccountID_2DChar[definedNumber_Int][1],
+                                        definedAccountID_2DChar[definedNumber_Int][2],
+                                        definedAccountID_2DChar[definedNumber_Int][3]
                                     )
                                 )
                             )
@@ -266,20 +276,20 @@ abstract class CentralBank
             
             }
     
-            private final static int CardNumberValidation_Method(char[] cardNumber_String,char[]definedCardNumber_ArrayChar)
+            private final static int CardIDValidation_Method(char[] cardID_String,char[]definedCardID_ArrayChar)
             {
 
                 if (!String.format("%1$c%2$c%3$c%4$c",
-                                cardNumber_String[4],
-                                cardNumber_String[5],
-                                cardNumber_String[6],
-                                cardNumber_String[7]
+                                cardID_String[4],
+                                cardID_String[5],
+                                cardID_String[6],
+                                cardID_String[7]
                                 ).equals(
                                     String.format("%1$c%2$c%3$c%4$c",
-                                        definedCardNumber_ArrayChar[0],
-                                        definedCardNumber_ArrayChar[1],
-                                        definedCardNumber_ArrayChar[2],
-                                        definedCardNumber_ArrayChar[3]
+                                        definedCardID_ArrayChar[0],
+                                        definedCardID_ArrayChar[1],
+                                        definedCardID_ArrayChar[2],
+                                        definedCardID_ArrayChar[3]
                                     )
                                 )
                             )
