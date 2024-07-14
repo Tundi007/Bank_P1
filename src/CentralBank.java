@@ -1,13 +1,17 @@
-import java.time.LocalDate;
 
-abstract class CentralBank implements IBank
+import java.time.LocalDate;
+import java.time.Period;
+
+abstract class CentralBank
 {
 
-    private static final char[][] definedAccountNumber_2DChar = {"".toCharArray(),"".toCharArray()};
+    private final char[][] definedAccountNumber_2DChar;
 
-    private static final char[] definedCardNumber_ArrayChar = "".toCharArray();
+    private final char[] definedCardNumber_ArrayChar;
 
-    private int accountType_Int = 0;
+    private final String[] accountType_ArrayString;
+
+    private int accountType_Int = -1;
 
     private String accountNumber_String = "";
 
@@ -17,7 +21,31 @@ abstract class CentralBank implements IBank
 
     private String cvv2_String = "";
 
-    @Override
+    private final double[] accountInterest_ArrayInt;
+
+    protected CentralBank(String[] accountType_ArrayString, char[][] definedAccountNumber_2DChar, char[] definedCardNumber_ArrayChar,double[]accountInterest_ArrayInt)
+    {
+
+        this.accountInterest_ArrayInt = accountInterest_ArrayInt;
+
+        this.definedAccountNumber_2DChar = definedAccountNumber_2DChar;
+
+        this.definedCardNumber_ArrayChar = definedCardNumber_ArrayChar;
+
+        this.accountType_ArrayString = accountType_ArrayString;
+
+    }
+
+    public final String GetAccountType_ArrayString()
+    {
+
+        if(accountType_Int == -1)
+            return "";
+
+        return accountType_ArrayString[accountType_Int];
+
+    }
+
     public final String GetAccountNumber_Method()
     {
 
@@ -28,7 +56,6 @@ abstract class CentralBank implements IBank
 
     }
 
-    @Override
     public final String GetCardNumber_Method()
     {
 
@@ -40,18 +67,16 @@ abstract class CentralBank implements IBank
     }
 
     
-    @Override
     public final String GetCardDate_Method()
     {
 
-        if (cardDate_LocalDate == null)        
+        if (cardDate_LocalDate == null)
             return "";
 
         return cardDate_LocalDate.toString();
 
     }
 
-    @Override
     public final String GetCvv2_Method()
     {
 
@@ -62,8 +87,7 @@ abstract class CentralBank implements IBank
 
     }
 
-    @Override
-    public final int SetAccountNumber_Method(String accountNumber_String)
+    public int SetAccountNumber_Method(String accountNumber_String)
     {
 
         accountNumber_String = accountNumber_String.trim();
@@ -71,7 +95,7 @@ abstract class CentralBank implements IBank
         if (Checkpoint.AccountNumberValidation_Method(accountNumber_String) == 1)
             return 1;
 
-        if ((accountType_Int = Checkpoint.BankDefined.AccountNumberValidation_Method(accountNumber_String.toCharArray())) == 0)
+        if ((accountType_Int = Checkpoint.BankDefined.AccountNumberValidation_Method(accountNumber_String.toCharArray(),definedAccountNumber_2DChar)) == 0)
             return 2;
 
         this.accountNumber_String = accountNumber_String;
@@ -80,8 +104,7 @@ abstract class CentralBank implements IBank
 
     }
 
-    @Override
-    public final int SetCardNumber_Method(String cardNumber_String)
+    public int SetCardNumber_Method(String cardNumber_String)
     {
 
         cardNumber_String = cardNumber_String.trim();
@@ -89,7 +112,7 @@ abstract class CentralBank implements IBank
         if (Checkpoint.CardNumberValidation_Method(cardNumber_String) == 1)
             return 1;
 
-        if (Checkpoint.BankDefined.CardNumberValidation_Method(cardNumber_String.toCharArray()) == 1)
+        if (Checkpoint.BankDefined.CardNumberValidation_Method(cardNumber_String.toCharArray(),definedCardNumber_ArrayChar) == 1)
             return 2;
 
         this.cardNumber_String = cardNumber_String;
@@ -98,7 +121,6 @@ abstract class CentralBank implements IBank
 
     }
 
-    @Override
     public final int SetCardDate_Method(String cardDate_String)
     {
 
@@ -115,7 +137,6 @@ abstract class CentralBank implements IBank
 
     }
 
-    @Override
     public final int SetCvv2_Method(String cvv2_String)
     {
 
@@ -129,14 +150,66 @@ abstract class CentralBank implements IBank
         return 0;
 
     }
-
-    protected static class Checkpoint extends IBank.Checkpoint
+    
+    abstract private static class Checkpoint
     {
 
-        protected static class BankDefined
+        private static int AccountNumberValidation_Method(String accountNumber_String)
         {
 
-            protected final static int AccountNumberValidation_Method(char[] accountNumber_ArrayChar)
+            if (accountNumber_String.length() != 10)
+                return 1;
+
+            return 0;
+        
+        }
+
+        private static int CardNumberValidation_Method(String cardNumber_String)
+        {
+
+            if (cardNumber_String.length() != 16)
+                return 1;
+
+            if (!String.format("%1$c%2$c%3$c%4$c",
+                cardNumber_String.charAt(0),
+                cardNumber_String.charAt(1),
+                cardNumber_String.charAt(2),
+                cardNumber_String.charAt(3)).equals("5051"))
+                return 1;
+
+            return 0;
+
+        }
+
+        private static int CardDateValidation_Method(LocalDate tempCardDate_LocalDate)
+        {
+
+            Period CardDate_Period;
+
+            if ((Period.of(5, 0, 0).minus(CardDate_Period = Period.between(                
+                LocalDate.now()
+                ,tempCardDate_LocalDate))).isNegative() |
+                CardDate_Period.isNegative())
+                return 1;
+
+            return 0;
+            
+        }
+
+        private static int Cvv2Validation_Method(String cvv2_String)
+        {
+
+            if (cvv2_String.length() != 3 & cvv2_String.length() != 4)
+                return 1;
+            
+            return 0;
+        
+        }
+
+        private abstract static class BankDefined
+        {
+
+            private final static int AccountNumberValidation_Method(char[] accountNumber_ArrayChar,char[][]definedAccountNumber_2DChar)
             {
 
                 for(int definedNumber_Int = 0; definedNumber_Int < definedAccountNumber_2DChar.length; definedNumber_Int++)
@@ -193,7 +266,7 @@ abstract class CentralBank implements IBank
             
             }
     
-            protected final static int CardNumberValidation_Method(char[] cardNumber_String)
+            private final static int CardNumberValidation_Method(char[] cardNumber_String,char[]definedCardNumber_ArrayChar)
             {
 
                 if (!String.format("%1$c%2$c%3$c%4$c",
